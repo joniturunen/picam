@@ -5,6 +5,7 @@ from picamutils.time import Timegiver
 from picamutils.aws import S3FileUploader
 
 ts = Timegiver()
+filename = 'tmp/snapshot.jpg'
 
 def signal_handler(sig, frame):
 	print("\n{ts.generateTimestamp()} ::QUIT:: `CTRL + C` received! Closing application.")
@@ -13,9 +14,15 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 print(f'{ts.generateTimestamp()} ::START:: Starting image capturing...\n{ts.generateTimestamp()} ::INFO:: Press `CTRL + C` to exit.')
 
-def take_a_shot(rotation):
+def take_a_shot(rotation=90):
 	camera = PiCamera()
+	camera.rotation = rotation
 	try:
-		pass
+		camera.start_preview()
+		sleep(2)
+		camera.capture(filename)
 	finally:
 		camera.close()
+		print(f'{ts.generateTimestamp()} ::DONE:: Image {filename} saved. \n{ts.generateTimestamp()} ::QUIT:: Exiting application..')
+
+take_a_shot()
