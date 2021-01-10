@@ -13,13 +13,16 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 print(f'{ts.generateTimestamp()} ::START:: Starting image capturing...\n{ts.generateTimestamp()} ::INFO:: Press `CTRL + C` to exit.')
 
-def timelapse(images=10, time_between_images=3):
+def timelapse(images=100, time_between_images=5, rot=180):
+	# Params:
+	# images - how many images to capture
+	# time_between_images - seconds between captures
+	# rot - camera rotation in degrees
 	camera = PiCamera()
 	camera.start_preview()
-	camera.rotation = 90
-	# Lets give the camera a 2s wait for it to warmup
+	camera.rotation = rot
+	# 2 second period for camera to warm up
 	sleep(2)
-
 
 	for i, filename in enumerate(camera.capture_continuous('tmp/img{counter:03d}.jpg')):
 		if i == images:
@@ -31,6 +34,6 @@ def timelapse(images=10, time_between_images=3):
 
 
 
-timelapse(3)
+timelapse()
 
 print(f'{ts.generateTimestamp()} ::INFO:: All done, exiting..')
